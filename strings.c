@@ -1,6 +1,27 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+char *strCopyUptoC(char s[], char c, char t[]){
+int i = 0;
+	while(s[i] != c && s[i] != '\0'){
+	  *(t+i) = s[i];
+	  i++;
+	}
+
+	if(s[i] == c){
+	   *(t+(i++)) = c;
+	   *(t+i) = '\0';
+	   return t;
+	}else{
+	   return NULL;
+	}
+}
+
+_Bool strCompInC(char s, char c){
+extern char * strCopyUptoC(char s[], char c, char t[]);
+	
+}
+
 char * formatAttr(char s[], char t[], _Bool notLine){
 int i,i1;
 char c, c1;
@@ -27,16 +48,16 @@ char *c;
 	for(i2 = 0;t[i2] != '\0' && *(c+i2) == *(t+i2);i2++){
 	;
 	}
-	if(t[i2] == '\0' && !isalpha(*(c+i2))){
+	if(t[i2] == '\0' && !isalnum(*(c+i2))){
 	return (c);
 	}
   }
   return NULL;
 }
 
-char * clearExcessSpaces(char s[], char t[], _Bool notLine){
+char * clearExcessSpaces(char s[],_Bool notLine){
 int i,i1;
-char c, c1;
+char c, c1,t[2000];
  c1 = (!notLine)? '\n' : '\0';
 	for(i1 = i = 0;(c = *(s+i)) != c1;i++){
 	     if(isspace(c) && isspace(*(s+i+1))){
@@ -46,7 +67,8 @@ char c, c1;
 	     }
 	}
 	  *(t+i1) = '\0';
-	  return t;
+	  strcpy(s,t);
+	  return s;
 }
 
 int strCopy(char s[], char t[], int cont){
@@ -85,8 +107,8 @@ int i;
   return (t[i] == '\0' && s[i-1] == t[i-1])? 1 : 0;
 }
 
-char * trimLine(char s[], char t[], _Bool notLine){
-char c, c1;
+char * trim(char s[], _Bool notLine){
+char c, c1,t[2000];
 int i, i1;
 c1 = (!notLine)? '\n' : '\0';
     for(i = i1 = 0;(c = s[i]) != c1;i++){
@@ -97,7 +119,8 @@ c1 = (!notLine)? '\n' : '\0';
 	  }
     }
     *(t+i1) = '\0';
-    return t;
+    strcpy(s,t);
+    return s;
 }
 
 char * getStartOfLine(char s[], int lineNo){
@@ -121,7 +144,7 @@ char *c;
   for(i = 0;*(c = s+i) != '\0'; i++){
 	for(i2 = 0;*(t+i2) != '\0' && *(c+i2) == *(t+i2);i2++){
 	;
-	}
+		}
 	if(*(t+i2) == '\0'){
 	return c;
 	}
