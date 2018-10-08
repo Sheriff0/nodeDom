@@ -1,8 +1,71 @@
+/****
+-g
+-o strings
+includes.c
+#*/
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-char *strCopyUptoC(char s[], char c, char t[]){
+#include <stdlib.h>
+
+extern _Bool sIncludes(char s[], char t[]);
+
+char * appendS(char t[], char s[], char y[]){
+extern char * appendC(char s[], char c);
+char c;
 int i = 0;
+   strcpy(y,t);
+
+	while(s[i] != '\0'){
+	 c = *(s+i);
+	 appendC(y,c);
+	 i++;
+	}
+	return y;
+}
+
+char * appendC(char s[], char c){
+char temp[2000], c1;
+int i;
+	for(i = 0;(c1 = s[i]) != '\0';i++){
+	 *(temp+i) = c1;
+	}
+	*(temp+(i++)) = c;
+	*(temp+i) = '\0';
+	strcpy(s,temp);
+	return s;
+
+}
+
+char * prependC(char s[], char c){
+char temp[2000], c1;
+int i;
+*temp = c;
+	for(i = 1;(c1 = s[i-1]) != '\0';i++){
+	 *(temp+i) = c1;
+	}
+	*(temp+i) = '\0';
+	strcpy(s,temp);
+	return s;
+}
+
+char * prependS(char t[], char s[],char y[]){
+extern char * prependC(char s[], char c);
+int i = strlen(s);
+char c;
+i--;
+  strcpy(y,t);
+	while((s+i) >= s){
+	 c = *(s+i);
+	 prependC(y,c);
+	 i--;
+	}
+	return y;
+}
+
+char *strCopyUptoC(char s[], char c, char t[]){
+int i = 1;
+   *t = *s;
 	while(s[i] != c && s[i] != '\0'){
 	  *(t+i) = s[i];
 	  i++;
@@ -17,9 +80,18 @@ int i = 0;
 	}
 }
 
-_Bool strCompInC(char s, char c){
+_Bool strCompInC(char s[], char c, char t[]){
 extern char * strCopyUptoC(char s[], char c, char t[]);
-	
+int i;	
+char temp[2000];
+   for(i=0;s[i] != c && s[i] != '\0'; i++){
+	;
+   }
+   if(s[i] == '\0' || strCopyUptoC(s+i,c, temp) == NULL){
+	return 0;
+   }else{
+      return (sIncludes(temp,t))? 1: 0; 
+   }
 }
 
 char * formatAttr(char s[], char t[], _Bool notLine){
@@ -155,13 +227,9 @@ char *c;
 
 /*
 int main(int argc,char **argv){
-char s[2000], t[2000], *l;
-int c, i;
-      for(i = 0;(c = getchar()) != EOF;i++){
-	      s[i] = c;
-      }
-      s[i] = '\0';
-      
-      
-printf("%s\n", clearExcessSpaces(s,t));
+char s[] = "\"valz vals vuls\"", t[] = " vals ";
+int i = 0;
+
+i = strCompInC(s,'"',t);
+printf("%i\n", i);
 }*/

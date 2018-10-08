@@ -46,7 +46,7 @@ return newLines;
 _Bool sIncludes(char s[], char t[]){
 int i, i2 = 0;
 char *c;
-  for(i = 0;(c = s+i) != '\0'; i++){
+  for(i = 0;*(c = s+i) != '\0'; i++){
 	for(i2 = 0;t[i2] != '\0' && *(c+i2) == *(t+i2);i2++){
 	;
 	}
@@ -94,7 +94,7 @@ int mdaIncludes(char *mda[], char t[],int len, int LIC){/*mULTI-dIMENTIONAL aRRA
 	
 	return -2;
 }
-
+/*
 int main(int argc, char **argv){
 	FILE *fp = fopen(argv[argc-1], "r");
 	int c, i, lines;
@@ -106,11 +106,11 @@ char str[1000], st[50];
 	}
 	str[i] = '\0';
 	lines = newLineC(str);
-	if(mdaIncludes(argv, "o", argc-1, 1) >= 0 || argc == 2/*the output option*/){	
+	if(mdaIncludes(argv, "o", argc-1, 1) >= 0 || argc == 2){	
 	fprintf(stdout,"%s", str);
 	}
 
-	if(mdaIncludes(argv, "i", argc-1, 1) >= 0/*get input option*/){
+	if(mdaIncludes(argv, "i", argc-1, 1) >= 0){
 	scanf("%s", st);
 		if((i = strlen(st)) >= 1 && (c = mdaIncludes(stringify(str, '\n'), st, lines, 0)) >= 0){
 	fprintf(stdout, "%i\n", c);
@@ -130,4 +130,4 @@ char str[1000], st[50];
 
 	
 	return 0;
-}
+}*/

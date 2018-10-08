@@ -1,3 +1,7 @@
+/****
+-o concat
+strings.c
+#*/
 #include <stdio.h>
 
 int concat(char s[], char *strings[], int len){

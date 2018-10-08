@@ -1,3 +1,9 @@
+/****
+-o getDomString
+strings.c
+concat.c
+#*/
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -39,6 +45,7 @@ concat(s, (term)? attr0 : attr1, len);
 char * querySelector(char document[], char query[]){
 int line;
 char expansion[20],trimmedDocLine[1000], *sol, *match = NULL;
+	 if(!startsWith(query,"[")){
 		if(startsWith(query, "#")){
 	 getHTMLattribute("id",(query+1),expansion,1);
 	 	}else if(startsWith(query, ".")){
@@ -63,21 +70,11 @@ char expansion[20],trimmedDocLine[1000], *sol, *match = NULL;
 	 }
 	
 	return (match = strIncludes(document,match), match);
+     }else{
+
+     }
 }
 /*
 char ** querySelectorAll(char document[], char query[]){
 
-}*/
-/*
-int main(int argc, char **argv){
-int i, c;
-static char s[5000],fs[5000] ,t[10], *p;
-FILE *html = fopen(argv[1], "r");
- for(i = 0;(c = fgetc(html)) != EOF;i++){
-	s[i] = c;
- }
- s[i] = '\0';
- formatAttr(s,fs,1);
-scanf("%s", t);
-printf("%s\n",querySelector(fs, t));
 }*/
