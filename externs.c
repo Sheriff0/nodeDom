@@ -109,6 +109,23 @@ i--;
 }
 
 /*********** CORES**********/
+
+char * resolveMutualDeps(char t[]){
+char noDup[50000] = {'\0'},*files[100];
+int i,i1;
+i = i1 = 0;
+i1 = stringify(t,' ',files);
+    do{
+	if(!sIncludes(noDup,files[i])){
+	   strcat(noDup,files[i]);
+	   strcat(noDup," ");
+	}
+	i++;
+    }while(i < i1);
+    strcpy(t,noDup);
+    return t;
+}
+
 char * readDepsDeps(FILE *fp, char t[]){
 int i = 0, c, stars = 0,slash = 0,c1;
 	while(t[i] != '\0'){
@@ -142,6 +159,33 @@ int i = 0, c, stars = 0,slash = 0,c1;
 	 return t;
 }
 
+char * combDepTree(char tld[],char deps[],char filename[]){
+FILE *fp;
+int i,i1,i2;
+char temp[20000], *files[100], depCollected[50000] = {'\0'};
+ strcpy(depCollected,tld);
+i = i1 = 0;
+  do{
+	  strcpy(temp,depCollected);
+        i2 = stringify(temp,' ',files);
+	    depCollected[0] = '\0';
+	    while(i1 < i2){
+	       if(!startsWith(files[i1], "-") && !startsWith(filename,files[i1]) && (fp = fopen(files[i1],"r")) != NULL){
+		 readDepsDeps(fp,depCollected);
+		 fclose(fp);
+	       }
+		    i1++;
+	    }
+		i1 = 0;
+
+	    if(depCollected[0] != '\0'){
+		strcat(deps,depCollected);
+	    }
+
+	 }while(depCollected[0] != '\0');
+  return deps;
+
+}
 
 char * appendDeps(FILE *fp, char deped[],char *files[], int len, int LIC){
 #define IN 1
@@ -278,20 +322,13 @@ FILE *fp = fopen(filename, "r");
 	int i,i1 = 0,i2 = 0;
 
      if(fp != NULL){
-	  if((i = mdaIncludes(argv,"-r",argc-1,1)) != -2 || mdaIncludes(argv,"-",argc-1,1) == -2){	
+	  if((i = mdaIncludes(argv,"-r",argc-1,1)) != -2 || mdaIncludes(argv,"-",argc-1,1) == -2 || mdaIncludes(argv,"-c",argc-1,1) != -2){	
 
 	    readDeps(fp, s);
-	    strcpy(temp,s);
 	    fclose(fp);
-	  i2 = stringify(temp,' ',deps);
-	    while(i1 < i2){
-	       if(!startsWith(deps[i1], "-") && !startsWith(filename,deps[i1]) && (fp = fopen(deps[i1],"r")) != NULL){
-		 readDepsDeps(fp,depsDeps);
-		 fclose(fp);
-	       }
-		    i1++;
-	    }
-
+	  
+		combDepTree(s,depsDeps,filename);
+		resolveMutualDeps(depsDeps);
 	    if(i == -2){
 		    
 	  i2 = stringify(depsDeps,' ',deps);
@@ -307,15 +344,18 @@ FILE *fp = fopen(filename, "r");
 	    printf("%s\n",filename);
 	}else{
 		i1 = 0;
+	    strcpy(temp,s);
 		if(mdaIncludes(argv,"-rv",argc-1,1) != -2){
-			strcpy(temp,s);
 			strcat(temp,depsDeps);
 	
-			i2 = stringify(temp,' ',deps);
 		}
+
+		i2 = stringify(temp,' ',deps);
 		while(i1 < i2){
-		   if(!startsWith(deps[i1], "-") && !startsWith(filename,deps[i1])){
-			printf("%s\n",deps[i1]);
+		   if(!startsWith(deps[i1], "-") && !startsWith(filename,deps[i1]) && isalnum(deps[i1][0])){
+			printf("%s",deps[i1]);
+			
+		 	putchar('\n');
 		   }
 		  i1++;
 		}
